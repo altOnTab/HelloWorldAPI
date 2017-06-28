@@ -83,6 +83,11 @@ namespace HelloWorldExtensibleConsole
                     Console.WriteLine("Who shall we say \"Hello\" to?");
                     Console.Write("[everybody]: ");
                     inputAudience = Console.ReadLine();
+                    // Check for no input (besides new line/CR) and set as default value
+                    if (string.IsNullOrEmpty(inputAudience))
+                    {
+                        inputAudience = "everybody";
+                    }
                 }
 
                 
@@ -105,7 +110,7 @@ namespace HelloWorldExtensibleConsole
                 Console.WriteLine(e.Message);
             }
 
-            Console.WriteLine("Press any key to continue...");
+            Console.WriteLine("Press any key to exit...");
             Console.ReadKey();
             Console.WriteLine();
 
