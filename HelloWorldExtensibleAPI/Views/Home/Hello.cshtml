@@ -1,0 +1,140 @@
+﻿
+@{
+    ViewBag.Title = "Salutations";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="page-header">
+    <h1>@ViewBag.Title</h1>
+</div>
+
+<p>This page calls one of two API methods:</p>
+<ol>
+    <li><strong>Hello</strong>: Returns the classic, "Hello, World!" phrase.</li>
+    <li><strong>Hello/audience:</strong> Returns Hello to a specified audience.</li>
+</ol>
+
+<div class="row">
+    
+    <div class="bs-example">
+        <h3>1. Call /api/Hello</h3>
+        <p>
+            <strong>Description:</strong> Returns classic "Hello, World!"
+        </p>
+        <div class="form-group">
+            <button id="btnHello" class="btn btn-default">Call /api/Hello</button>
+            <button id="btnHelloClear" class="btn btn-clear-api-result">Clear Result</button>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-body api-result" id="resultHello">&nbsp;</div>
+        </div>
+    </div><!-- /example1 -->
+
+    
+    <div class="bs-example">
+        <h3>2. Call /api/Hello/Audience</h3>
+        <p><strong>Description:</strong> Returns hello to a specified audience
+        </p>
+        <div class="form-group">
+            <label for="inputAudience">Audience:</label>
+            <input type="text" class="form-control" id="inputAudience" placeholder="everybody">
+        </div>
+        <div class="form-group">
+            <button id="btnHelloAudience" class="btn btn-default">Call /api/Hello/audience</button>
+            <button id="btnHelloAudienceClear" class="btn btn-clear-api-result" type="submit">Clear Result</button>
+        </div>
+        
+        <div class="panel panel-default">
+            <div class="panel-body api-result" id="resultHelloAudience">&nbsp;</div>
+        </div>
+    </div><!-- /example2 -->
+    
+
+</div>
+
+
+@section scripts
+{
+        <script>
+            $(document).ready(function () {
+                // Set up our page
+                jQuery.support.cors = true;
+                $("#inputAudience").prop('required',true);
+
+                // "Hello World" button is clicked
+                $("#btnHello").click(function (e) {
+                    e.preventDefault();
+                    $.ajax({
+                        url: '/api/Hello',
+                        type: 'GET',
+                        success: function (resp) {
+                            $("#resultHello").text(resp);
+                        },
+                        error: function (x, y, z) {
+                            alert(x + '\n' + y + '\n' + z);
+                        }
+                    });
+                });
+
+                //"Hello [audience]" button is clicked
+                $("#btnHelloAudience").click(function (e) {
+                    e.preventDefault();
+                    var inputText = $("#inputAudience").val();
+                    if (inputText === "") {
+                        alert("Please enter an Audience");
+                        $("#inputAudience").focus();
+                        return;
+                    }
+                    $.ajax({
+                        url: '/api/Hello?audience=' + encodeURIComponent(inputText),
+                        type: 'GET',
+                        success: function (resp) {
+                            $("#resultHelloAudience").text(resp);
+                        },
+                        error: function (x, y, z) {
+                            alert(x + '\n' + y + '\n' + z);
+                        }
+                    });
+                });
+            });
+
+            $("#btnHelloClear").click(function (e) {
+                $("#resultHello").html("&nbsp;");
+            });
+
+            $("#btnHelloAudienceClear").click(function (e) {
+                $("#resultHelloAudience").html("&nbsp;");
+                $("#inputAudience").val("");
+                $("#inputAudience").focus();
+            });
+        </script>
+    }
+
+    <style>
+        .api-result {
+            background-color: #666;
+            /*background-color: #213b64;*/
+            color: #f0ffff;
+            font-family: monospace;
+            font-size: large;
+        }
+
+        .btn-default {
+            color: #333;
+            background-color: #fdb913;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        /* bootstrap-example class, Credit: www.bootstrap.com */
+        .bs-example {
+            margin-right: 0;
+            margin-left: 0;
+            background-color: #fff;
+            border-color: #ddd;
+            border-width: 1px;
+            border-radius: 4px 4px 0 0;
+            -webkit-box-shadow: none;
+            box-shadow: none;
+        }
+    </style>

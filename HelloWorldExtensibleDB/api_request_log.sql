@@ -1,0 +1,8 @@
+﻿CREATE TABLE [dbo].[api_request_log]
+(
+	[request_id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY DEFAULT NEWSEQUENTIALID(),
+	[method] NVARCHAR(128) NOT NULL,
+	[parameters] NVARCHAR(512),
+	[session_id] NVARCHAR(256) NOT NULL,
+	[request_datetime] DATETIME DEFAULT GETDATE() NOT NULL
+)
